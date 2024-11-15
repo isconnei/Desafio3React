@@ -1,38 +1,56 @@
-import CardPizza from "../CardPizza/CardPizza";
+import { useState, useEffect } from "react";
+import Cart from "./Cart";
 import Header from "./Header";
+import { pizzas as initialPizzas } from "../../pizzas";
 
 export default function Home() {
+  const [listPizza, setListPizza] = useState(
+    initialPizzas.map((pizza) => ({
+      ...pizza,
+      quantity: pizza.quantity || 1,
+    }))
+  );
+
+  const [total, setTotal] = useState(0);
+
+  const calculateTotal = () => {
+    const newTotal = listPizza.reduce((acc, pizza) => {
+      return acc + pizza.quantity * pizza.price;
+    }, 0);
+    setTotal(newTotal);
+  };
+
+  useEffect(() => {
+    calculateTotal();
+  }, [listPizza]);
+
+  const handleUpdatePizza = (index, updatedPizza) => {
+    if (updatedPizza.quantity === 0) {
+      setListPizza((prevList) => prevList.filter((_, i) => i !== index));
+    } else {
+      setListPizza((prevList) => {
+        const updatedList = [...prevList];
+        updatedList[index] = updatedPizza;
+        return updatedList;
+      });
+    }
+  };
+
   return (
     <div id="home">
       <Header />
-      <div className="container mt-3">
-        <div className="row">
-          <CardPizza
-            name="Napolitana"
-            price={5950}
-            ingredients={["mozzarella", "tomates", "jamón", "orégano"]}
-            img="https://firebasestorage.googleapis.com/v0/b/apis-varias-mias.appspot.co
-m/o/pizzeria%2Fpizza-1239077_640_cl.jpg?alt=media&token=6a9a33da-5c00-49d4-9
-080-784dcc87ec2c"
+      <div className="row">
+        {listPizza.map((pizza, index) => (
+          <Cart
+            key={index}
+            pizza={pizza}
+            onUpdate={(updatedPizza) => handleUpdatePizza(index, updatedPizza)}
           />
+        ))}
+      </div>
 
-          <CardPizza
-            name="Española"
-            price={6950}
-            ingredients={["mozzarella", "gorgonzola", "parmesano", "provolone"]}
-            img="https://firebasestorage.googleapis.com/v0/b/apis-varias-mias.appspot.co
-m/o/pizzeria%2Fcheese-164872_640_com.jpg?alt=media&token=18b2b821-4d0d-43f2-
-a1c6-8c57bc388fab"
-          />
-          <CardPizza
-            name="Pepperoni"
-            price={6950}
-            ingredients={["mozzarella", "pepperoni", "orégano"]}
-            img="https://firebasestorage.googleapis.com/v0/b/apis-varias-mias.appspot.co
-m/o/pizzeria%2Fpizza-1239077_640_com.jpg?alt=media&token=e7cde87a-08d5-4040-
-ac54-90f6c31eb3e3"
-          />
-        </div>
+      <div className="mt-3">
+        <h4>Total: ${total.toLocaleString()}</h4>
       </div>
     </div>
   );

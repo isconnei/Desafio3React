@@ -12,9 +12,10 @@ function App() {
   return (
     <>
       <Navbar />
-      {/* <Home /> */}
-      <RegisterPage />
-      <LoginPage />
+      <Home />
+      {/* <RegisterPage />
+      <LoginPage />*/}
+
       <Footer />
     </>
   );
