@@ -5,6 +5,7 @@ import Home from "./component/Home/Home";
 import Footer from "./component/Footer/Footer";
 import RegisterPage from "./component/Register/RegisterPage";
 import LoginPage from "./component/Register/LoginPage";
+import Cart from "./component/Home/Cart";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -15,7 +16,7 @@ function App() {
       <Home />
       {/* <RegisterPage />
       <LoginPage />*/}
-
+      <Cart />
       <Footer />
     </>
   );
